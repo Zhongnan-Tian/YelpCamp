@@ -1,0 +1,217 @@
+<% include ../partials/header %>
+
+<% if(foundCamp) { %>
+
+    <section id="campground-body" class="py-3">
+      <div class="container">
+        <div class="row">
+          
+          <!--left side  -->
+          <div class="col-md-3">
+            <div class="card mb-3">
+              <div class="card-body m-3 border-secondary">
+                <h3>Name</h3>
+                <p>
+                  <%= foundCamp.name %>
+                </p>
+                <h3>Price</h3>
+                <p><%= foundCamp.price %>/night</p>
+                <h3>Location</h3>
+                <p><%= foundCamp.location %></p>
+              </div>
+            </div>
+          </div>
+          
+          <!--right side-->
+          <div class="col-md-9">
+            <!--right-top -->
+            <div class="row mb-5">
+              <div class="col">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="text-center">Photos</h3>
+                  </div>
+                  <div class="card-body">
+                    <img
+                      src="<%= foundCamp.image %>"
+                      alt=""
+                      class="img-fluid mb-3"
+                    />
+                    <p class="card-text text-center">
+                      <%= foundCamp.description %>
+                    </p>
+                  </div>
+                  <div class="card-footer text-center">
+                    <p class="card-text">
+                      <small class="text-muted"
+                        >submitted by <a href="/users/<%= foundCamp.author.id %>"><%= foundCamp.author.username %></a>, <%= moment(foundCamp.createdAt).fromNow() %></small
+                      >
+                    </p>
+                    
+                    <% if(currentUser &&
+                    foundCamp.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin ) { %>
+                    <a
+                      class="btn btn-warning text-white"
+                      data-toggle="modal" data-target="#editCampground"
+                      >Edit This Camp</a>
+                    <a
+                      class="btn btn-danger text-white"
+                      data-toggle="modal" data-target="#deleteCampground"
+                      >Delete This Camp</a>
+                      
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!--right-bottom-->
+            <div class="row">
+              <div class="col">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="text-center">Comments</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="text-center">
+                      <button class="btn btn-info" data-toggle="modal" data-target="#newCommentModal">
+                        Add New Comment
+                      </button>
+                    </div>
+                    <hr>
+                    <% foundCamp.comments.forEach(function(comment){ %>
+                        <div class="row">
+                          <div class="col">
+                            <strong><%= comment.author.username %></strong>
+                            <span class="float-right text-muted"><%= moment(comment.createdAt).fromNow() %></span>
+                            <p>
+                              <%= comment.text %>
+                            </p>
+                            
+                            <% if(currentUser &&
+                            comment.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin ) { %>
+                              <a
+                                href="/campgrounds/<%= foundCamp._id %>/comments/<%= comment._id%>/edit"
+                                class="btn btn-warning btn-sm"
+                                ><i class="fas fa-pencil-alt text-white"></i></a>
+                              
+                              <form class="delete-form" action="/campgrounds/<%= foundCamp._id%>/comments/<%= comment._id%>?_method=DELETE" method="POST">
+                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt text-white"></i></button>
+                              </form>
+                            
+                            <% } %>
+                            
+                          </div>
+                        </div>
+                        <hr>
+                    <% }) %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--modal for editing campground -->
+    <div class="modal" id="editCampground">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center text-info">Edit Campground <%= foundCamp.name %></h5>
+            <button class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form action="/campgrounds/<%= foundCamp._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <div class="form-group">
+                  <input class="form-control" type="textbox" value="<%= foundCamp.name%>" name="name">
+              </div>
+              <div class="form-group">
+                  <input class="form-control" type="textbox" value="<%= foundCamp.location %>" name="location">
+              </div>
+              <div class="form-group">
+                  <input class="form-control" type="text" value=<%= foundCamp.price%> name="price" min="0.01" step="0.01">
+              </div>
+              <div class="form-group">
+                  <label for="image">Upload a new image if you want </label>
+                  <input id="image" class="form-control" type="file" name="image" accept="image/*">
+              </div>
+              <div class="form-group">
+                  <input class="form-control" type="textbox" value="<%= foundCamp.description%>" name="description">
+              </div>
+              <div class="form-group">
+                  <button class="btn btn-info btn-lg btn-block">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!--modal for deleting campground -->
+    <div class="modal" id="deleteCampground">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center text-info"><%= foundCamp.name %> will be deleted permanently...</h5>
+            <button class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form
+                class="delete-form"
+                action="/campgrounds/<%= foundCamp._id%>?_method=DELETE"
+                method="POST"
+            >
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" type="submit">Confirm</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!--modal for adding new comment -->
+    <div class="modal" id="newCommentModal">
+      
+      <% if(currentUser) { %>
+      
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-center text-info">Add New Comment to <%= foundCamp.name %></h5>
+              <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form action="/campgrounds/<%= foundCamp._id %>/comments" method="POST">
+                
+                <div class="form-group">
+                    <textarea class="form-control from-control-lg" type="text" placeholder="comment" name="comment[text]"></textarea>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-info btn-lg btn-block">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% } else { %>
+          
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-center text-info">Please login first</h5>
+              <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body text-center">
+              <a href="/login" class="btn btn-success btn-lg">Login</a>
+            </div>
+          </div>
+        </div>  
+          
+      <% } %>
+      
+    </div>
+    
+ <% } %>   
+<% include ../partials/footer %>

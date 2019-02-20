@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Yelp Camp</title>
+        <link
+          rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+          crossorigin="anonymous"
+        />
+        <link
+          rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+          crossorigin="anonymous"
+        />
+        <link rel="stylesheet" type="text/css" href="/stylesheets/app.css">
+    </head>
+    
+    <body>
+        
+        <nav
+          id="main-nav"
+          class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark"
+        >
+          <div class="container">
+            <a href="/" class="navbar-brand bold">YelpCamp</a>
+            <button
+              class="navbar-toggler"
+              data-toggle="collapse"
+              data-target="#collapseItems"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="collapseItems" class="collapse navbar-collapse">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                  <a href="/campgrounds" class="nav-link">Home</a>
+                </li>
+                <!--<li class="nav-item">-->
+                <!--  <a href="/about" class="nav-link px-1">About</a>-->
+                <!--</li>-->
+                <% if(!currentUser) { %>
+                    <li class="nav-item">
+                      <a href="/register" class="nav-link px-1">Sign Up</a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/login" class="nav-link px-1">Login</a>
+                    </li>
+                <% } else { %>
+                
+                    <li class="nav-item dropdown">
+                      <a
+                        href="#"
+                        class="nav-link px-1 dropdown-toggle"
+                        data-toggle="dropdown"
+                        >Signed in as 
+                        <% if( currentUser.isAdmin ) { %>
+                          - admin - 
+                       <% } %>
+                        <%= currentUser.username %></a
+                      >
+                      <div class="dropdown-menu">
+                        <a href="/users/<%= currentUser._id %>" class="dropdown-item">Dashboard</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/reset-password" class="dropdown-item">Reset Password</a>
+                      </div>
+                    </li>
+                    
+                    <li class="nav-item">
+                      <a href="/logout" class="nav-link px-1">Logout</a>
+                    </li>
+                <% } %>
+                <li class="nav-item">
+                      <form class="input-group" action="/campgrounds" method="GET">
+                        <input type="text" name="search" placeholder="" class="form-control bg-light">
+                        <div class="input-group-append">
+                          <button type="submit" class="form-control btn btn-success">search</button>
+                        </div>
+                      </form>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      
+        <div id="notification-bar">
+            <% if(error && error.length > 0) { %>
+                <div class="alert alert-danger" role="alert">
+                    <%= error %>
+                </div>
+            <% } %>
+            
+            <% if(success && success.length > 0) { %>
+                <div class="alert alert-success" role="alert">
+                    <%= success%>
+                </div>
+            <% } %>
+        </div>

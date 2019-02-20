@@ -1,0 +1,49 @@
+<% include ../partials/header %>
+    <section id="profile" class="pb-5">
+        <div id="profile-header" class="py-4 text-center text-white">
+          <div class="dark-overlay">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6 m-auto">
+                  <h1 class="pt-3"><%= user.firstname %> <%= user.lastname %></h1>
+                  <% if(currentUser && user._id.equals(currentUser._id)) { %>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+            
+      <div class="row mt-5">
+        <div class="col mb-3 text-center">
+          <h2 class="display-5 text-success"><%= user.firstname %>'s campgrounds</h2>
+         <% if(campgrounds.length < 1) { %>
+              <h5 class="text-center mb-5 text-muted">No campgrounds created yet... </h5>
+              <a class="btn btn-success btn-lg" href="/campgrounds/new">Create New Campground</a>
+         <% } %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col m-auto text-center">
+          <div class="card-columns">
+            <% campgrounds.forEach(function(campground) { %>
+              <div class="card">
+                <img
+                  class="card-img-top"
+                  src="<%= campground.image %>"
+                  alt=""
+                />
+                <div class="card-body">
+                  <h4 class="card-title"><%= campground.name %></h4>
+                  <a href="/campgrounds/<%= campground._id%>" class="btn btn-info">More Info</a>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+    </div>
+    </section>
+
+<% include ../partials/footer %>

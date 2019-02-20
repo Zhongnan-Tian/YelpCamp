@@ -1,0 +1,88 @@
+<% include ../partials/header %>
+
+    <section id="showcase">
+      <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1"></li>
+          <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item carousel-image-1 active">
+            <div class="container">
+              <div class="carousel-caption d-none d-sm-block text-center mb-5">
+                <h1 class="display-3">Welcome to YelpCamp!</h1>
+                <p class="lead">
+                  With tons of campgrounds to choose from, we know you will find your perfect campsite!
+                </p>
+                <a class="btn btn-success btn-lg" href="/campgrounds/new">Create New Campground</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item carousel-image-2">
+            <div class="container">
+              <div class="carousel-caption d-none d-sm-block text-left mb-5">
+                <h1 class="display-3">Adventure Starts Here</h1>
+                <p class="lead">
+                  Experience the beauty of worldwide natural landscapes, from fully-serviced lakeside grounds surrounded by pine forests to rocky windswept sites. 
+                </p>
+                <a class="btn btn-info btn-lg" href="/campgrounds/new">Create New Campground</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item carousel-image-3">
+            <div class="container">
+              <div class="carousel-caption d-none d-sm-block text-right mb-5">
+                <h1 class="display-3">Create and Share</h1>
+                <p class="lead">
+                  Share your favorite campgrounds and help others to find their next stay...
+                </p>
+                <a class="btn btn-primary btn-lg" href="/campgrounds/new">Create New Campground</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="#myCarousel" data-slide="prev" class="carousel-control-prev">
+          <span class="carousel-control-prev-icon"></span>
+        </a>
+
+        <a href="#myCarousel" data-slide="next" class="carousel-control-next">
+          <span class="carousel-control-next-icon"></span>
+        </a>
+      </div>
+    </section>
+  
+  <% if(noMatch) { %>
+        <div class="container">
+          <div class="row py-5">
+            <div class="col m-auto text-center text-warning">
+              <h3 class="display-5"><%= noMatch %> or <a href="/campgrounds" class="text-success">check all campgrounds</a></h3>
+            </div>
+          </div>
+        </div>
+  <% }  %>
+  
+  <section id="campgrounds" class="py-5 bg-light text-center">
+      <div class="container">
+        <div class="card-columns">
+          <% campgrounds.forEach(function(campground){ %>
+            <div class="card">
+              <img
+                class="card-img-top"
+                src="<%= campground.image %>"
+                alt=""
+              />
+              <div class="card-body">
+                <h4 class="card-title"><%= campground.name %></h4>
+                <a href="/campgrounds/<%= campground._id%>" class="btn btn-info">More Info</a>
+              </div>
+            </div>
+          <%  }); %>
+        </div>
+      </div>
+  </section>
+
+<% include ../partials/footer %>
